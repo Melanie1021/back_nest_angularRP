@@ -1,19 +1,19 @@
-import { Inject } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { DataSource } from "typeorm";
 
 export const databaseProvider=[
     {
-        provide: 'DATABASE_CONNECTION',
+        provide: 'DATABASE_CONNECTION_POSTGRES',
         Inject: [ConfigService],
-        useFactory:()=>{
+        useFactory:(config: ConfigService)=>{
           const dataSource = new DataSource({
               type: 'postgres',
-              host: 'localhost',
-              port: 5432,
-              username: 'postgres',
-              password: '0983239989',
-              database: 'back_nest_angular'
+              host:config.get('HOST') ||'localhost',
+              port: +config.get('PORT_DB'),
+              username: config.get('USERNAME')||'root',
+              password: config.get('PASSWORD')|| 'prueba',
+              database: config.get('DATABASE')
+            
             });
 
             return dataSource.initialize();
